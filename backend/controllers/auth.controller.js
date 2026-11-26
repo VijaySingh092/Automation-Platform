@@ -81,3 +81,23 @@ export const logout = async(req,res)=>{
         return res.status(500).json({message:`logut erro : ${error}`})
     }
 }
+
+
+// me controller  : Login establishes the user's session, while the me controller allows the frontend to recover the currently logged-in user's information whenever needed
+// It is commonly used when:
+// - A user refreshes the browser.
+// - A user opens the application again while their login session is still valid.
+// - The frontend needs to display the current user's profile information.
+// - You need to check which user is currently authenticated.
+// After refreshing, React's in-memory state may be lost.
+// How does the frontend know who is logged in?
+// It calls your /me endpoint.
+
+export const me = async(req,res)=>{
+    try{
+        const user = req.user // copying the reference to the existing user document into a local variable named user
+        return res.status(200).json(user)   // sends the authenticated user's data to the frontend as a JSON response
+    }catch(error){
+        return res.status(500).json({message:`me error : ${error}`})
+    }
+}
