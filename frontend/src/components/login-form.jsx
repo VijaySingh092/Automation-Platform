@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/field"
 import { getIdToken, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/firebase";
+import { login } from "@/features/auth";
 
 export function LoginForm({
   className,
@@ -24,7 +25,7 @@ export function LoginForm({
     //  function executes when the user clicks the Google Login button
     const handleGoogleLogin=async()=>{
       try{
-        const data = await signInWithPopup(auth, googleProvider)  // This function is provided by Firebase Authentication    
+        const result = await signInWithPopup(auth, googleProvider)  // This function is provided by Firebase Authentication    
         // auth-->Firebase Authentication instance   
         // googleProvider-->	Specifies Google as the authentication provider
         // 1. Firebase opens a Google login popup.
@@ -33,12 +34,14 @@ export function LoginForm({
         // 4. Firebase receives the authentication response.
         // 5. Firebase resolves the Promise with an authentication result.
 
-        // data variable contains an authentication result object.
+        // result variable contains an authentication result object.
         // Firebase has authenticated the user. Now you need an ID token to prove that authentication to your backend.
         // - data.user represents the authenticated user.
         // - getIdToken() is a Firebase User method.
         // - It returns a Promise containing a Firebase ID token
-        const token = await data.user.getIdToken()
+        const token = await result.user.getIdToken()
+        const data = await login(token)  // call the login function and pass firebase token in it
+        console.log(data)
       }catch(err){
         console.log(err)
       }
